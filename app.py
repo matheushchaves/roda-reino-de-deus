@@ -69,7 +69,7 @@ Conclua a mensagem com uma palavra de encorajamento geral. (formato: markdown)
         "model": "gpt-3.5-turbo",  # ou "gpt-4" se você tiver acesso
         "messages": messages,
         "temperature": 0.5,
-        "max_tokens": 1000
+        "max_tokens": 2000
     }
     try:
         response = requests.post(ENDPOINT, headers=headers, json=data)
