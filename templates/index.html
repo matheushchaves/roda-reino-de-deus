@@ -36,7 +36,11 @@
         <h1 class="text-center text-primary">Roda do Reino de Deus</h1>
         <p class="text-center">Clique em uma nota para avaliar cada área. As notas vão de 1 (Muito ruim) a 10 (Muito bom).</p>
         <form action="/result" method="POST">
-            <div class="row">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+                <div class="row">
                 {% for area in areas %}
                 <div class="col-md-6 col-sm-12 mb-4">
                     <label class="form-label fw-bold">{{ area.name }}:</label>
