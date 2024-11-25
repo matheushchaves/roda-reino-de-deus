@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,13 +59,15 @@
 <body class="bg-light">
     <div class="container my-5">
         <h1 class="text-center text-primary">Roda do Reino de Deus</h1>
-        <p class="text-center">Clique em uma nota para avaliar cada área. As notas vão de 1 (Muito ruim) a 10 (Muito bom).</p>
+        <p class="text-center fst-italic">"Mas buscai primeiro o Reino de Deus, e a sua justiça, e todas estas coisas vos serão acrescentadas."<br>— Mateus 6:33</p>
+        <p class="text-center">Bem-vindo(a) à <strong>Roda do Reino de Deus</strong>, uma ferramenta de autorreflexão espiritual. Este questionário foi criado para ajudá-lo(a) a avaliar diferentes áreas da sua vida cristã, identificar pontos fortes e áreas que podem ser aprimoradas em sua caminhada com Deus.</p>
+        <p class="text-center">Por favor, avalie cada área abaixo clicando na nota que melhor representa o seu nível atual. As notas variam de 1 (Muito Ruim) a 10 (Excelente).</p>
         <form action="/result" method="POST">
             <div class="mb-3">
                 <label for="name" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <input type="text" class="form-control" id="name" name="name" required placeholder="Digite seu nome completo">
             </div>
-                <div class="row">
+            <div class="row">
                 {% for area in areas %}
                 <div class="col-md-6 col-sm-12 mb-4">
                     <label class="form-label fw-bold">{{ area.name }}:</label>
@@ -105,6 +107,7 @@
         // Exibir a tela de carregamento ao enviar o formulário
         document.querySelector('form').addEventListener('submit', function() {
             document.getElementById('loading-screen').style.display = 'block';
-        });    </script>
+        });
+    </script>
 </body>
 </html>
