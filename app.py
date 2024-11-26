@@ -35,12 +35,15 @@ AREAS = [
 def index():
     return render_template("index.html", areas=AREAS)
 
+import requests
+import os
+import markdown
+import time
+
 def generate_assessment(name, scores):
     """
     Gera uma avaliação personalizada baseada nas notas usando a API do ChatGPT via REST.
     """
-    import requests
-
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
     ENDPOINT = "https://api.openai.com/v1/chat/completions"
 
@@ -66,24 +69,35 @@ Conclua a mensagem com uma palavra de encorajamento geral. (formato: markdown)
         {"role": "user", "content": prompt}
     ]
     data = {
-        "model": "gpt-3.5-turbo",  # ou "gpt-4" se você tiver acesso
+        "model": "gpt-3.5-turbo",
         "messages": messages,
         "temperature": 0.5,
         "max_tokens": 2000
     }
-    try:
-        response = requests.post(ENDPOINT, headers=headers, json=data)
-        response.raise_for_status()
-        response_json = response.json()
-        if 'choices' in response_json and response_json['choices']:
-            assessment_markdown = response_json['choices'][0]['message']['content'].strip()
-            # Converte Markdown para HTML
-            assessment_html = markdown.markdown(assessment_markdown)
-            return assessment_html
-    except requests.exceptions.RequestException as e:
-        print(f"Erro ao acessar a API do ChatGPT: {e}")
-    return "Desculpe, não foi possível gerar uma avaliação no momento."
 
+    max_retries = 5
+    retries = 0
+    wait_time = 2  # Tempo de espera inicial em segundos
+
+    while retries < max_retries:
+        try:
+            response = requests.post(ENDPOINT, headers=headers, json=data)
+            response.raise_for_status()
+            response_json = response.json()
+            if 'choices' in response_json and response_json['choices']:
+                assessment_markdown = response_json['choices'][0]['message']['content'].strip()
+                # Converte Markdown para HTML
+                assessment_html = markdown.markdown(assessment_markdown)
+                return assessment_html
+        except requests.exceptions.RequestException as e:
+            print(f"Tentativa {retries + 1} de {max_retries} falhou: {e}")
+            retries += 1
+            if retries < max_retries:
+                print(f"Aguardando {wait_time} segundos antes da próxima tentativa...")
+                time.sleep(wait_time)  # Aguarda antes de tentar novamente
+                wait_time *= 2  # Dobra o tempo de espera (exponencial backoff)
+
+    return "Desculpe, não foi possível gerar uma avaliação no momento."
 
 @app.route("/result", methods=["POST"])
 def result():
